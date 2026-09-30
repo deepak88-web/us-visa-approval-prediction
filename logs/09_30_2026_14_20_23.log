@@ -1,0 +1,29 @@
+[ 2026-09-30 14:20:25,939 ] asyncio - DEBUG - Using proactor: IocpProactor
+[ 2026-09-30 14:20:27,317 ] root - INFO - Entered the start_data_ingestion method of TrainPipeline class
+[ 2026-09-30 14:20:27,317 ] root - INFO - Getting the data from mongodb
+[ 2026-09-30 14:20:27,317 ] root - INFO - Entered initiate_data_ingestion method of Data_Ingestion class
+[ 2026-09-30 14:20:27,317 ] root - INFO - Exporting data from mongodb
+[ 2026-09-30 14:20:36,696 ] root - INFO - MongoDB connection succesfull
+[ 2026-09-30 14:20:40,581 ] root - INFO - Shape of dataframe: (25480, 12)
+[ 2026-09-30 14:20:40,583 ] root - INFO - Saving exported data into feature store file path: artifact\09_30_2026_14_20_25\data_ingestion\feature_store\usvisa.csv
+[ 2026-09-30 14:20:40,653 ] root - INFO - Got the data from mongodb
+[ 2026-09-30 14:20:40,653 ] root - INFO - Entered split_data_as_train_test method of Data_Ingestion class
+[ 2026-09-30 14:20:40,659 ] root - INFO - Performed train test split on the dataframe
+[ 2026-09-30 14:20:40,659 ] root - INFO - Exited split_data_as_train_test method of Data_Ingestion class
+[ 2026-09-30 14:20:40,659 ] root - INFO - Exporting train and test file path.
+[ 2026-09-30 14:20:40,706 ] root - INFO - Exported train and test file path.
+[ 2026-09-30 14:20:40,707 ] root - INFO - Performed train test split on the dataset
+[ 2026-09-30 14:20:40,707 ] root - INFO - Exited initiate_data_ingestion method of Data_Ingestion class
+[ 2026-09-30 14:20:40,707 ] root - INFO - Data ingestion artifact: DataIngestionArtifact(trained_file_path='artifact\\09_30_2026_14_20_25\\data_ingestion\\ingested\\train.csv', test_file_path='artifact\\09_30_2026_14_20_25\\data_ingestion\\ingested\\test.csv')
+[ 2026-09-30 14:20:40,707 ] root - INFO - Got the train_set and test_set from mongodb
+[ 2026-09-30 14:20:40,707 ] root - INFO - Exited the start_data_ingestion method of TrainPipeline class
+[ 2026-09-30 14:20:40,707 ] root - INFO - Entered the start_data_validation method of TrainPipeline class
+[ 2026-09-30 14:20:40,708 ] root - INFO - Starting data validation
+[ 2026-09-30 14:20:40,972 ] root - INFO - Is required column present: [True]
+[ 2026-09-30 14:20:40,972 ] root - INFO - All required columns present in training dataframe: True
+[ 2026-09-30 14:20:40,972 ] root - INFO - Is required column present: [True]
+[ 2026-09-30 14:20:40,972 ] root - INFO - All required columns present in testing dataframe: True
+[ 2026-09-30 14:20:42,084 ] root - INFO - Drift detected.
+[ 2026-09-30 14:20:42,084 ] root - INFO - Data validation artifact: DataValidationArtifact(validation_status=True, message='Drift detected', drift_report_file_path='artifact\\09_30_2026_14_20_25\\data_validation\\drift_report\\report.html')
+[ 2026-09-30 14:20:42,084 ] root - INFO - Performed the data validation operation
+[ 2026-09-30 14:20:42,084 ] root - INFO - Exited the start_data_validation method of TrainPipeline class
