@@ -1,0 +1,18 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+
+# Local virtual environment and package metadata
+.venv/
+venv/
+*.egg-info/
+
+# Generated training artifacts and logs
+artifact/
+logs/
+data_drift_report.html
+
+# Local environment variables and secrets
+.env
+.env.*
+!.env.example
