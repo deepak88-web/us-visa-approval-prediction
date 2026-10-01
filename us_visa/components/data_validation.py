@@ -41,7 +41,16 @@ class DataValidation:
         On Failure  :   Write an exception log and then raise an exception
         """
         try:
-            status = len(dataframe.columns) == len(self._schema_config["columns"])
+            expected_columns = {
+                column
+                for column_definition in self._schema_config["columns"]
+                for column in column_definition
+            }
+            status = (
+                len(dataframe.columns) == len(expected_columns)
+                and set(dataframe.columns) == expected_columns
+                and not dataframe.columns.has_duplicates
+            )
             logging.info(f"Is required column present: [{status}]")
             return status
         except Exception as e:
@@ -107,12 +116,15 @@ class DataValidation:
             os.makedirs(os.path.dirname(report_path), exist_ok=True)
             result.save_html(report_path)
 
-            # Get report as dictionary
+            # Evidently's DriftedColumnsCount metric provides the actual
+            # aggregate drift result. A successful report run alone is not drift.
             report_dict = result.dict()
-
-            print(report_dict)
-
-            return True
+            for metric in report_dict.get("metrics", []):
+                if metric.get("metric_name", "").startswith("DriftedColumnsCount"):
+                    value = metric.get("value", {})
+                    return bool(value.get("count", 0))
+            logging.warning("DriftedColumnsCount metric missing from drift report")
+            return False
 
         except Exception as e:
             raise USvisaException(e, sys) from e
@@ -164,9 +176,10 @@ class DataValidation:
             if validation_status:
                 drift_status = self.detect_dataset_drift(train_df, test_df)
                 if drift_status:
-                    logging.info(f"Drift detected.")
+                    logging.info("Drift detected between training and test data.")
                     validation_error_msg = "Drift detected"
                 else:
+                    logging.info("No drift detected between training and test data.")
                     validation_error_msg = "Drift not detected"
             else:
                 logging.info(f"Validation_error: {validation_error_msg}")
