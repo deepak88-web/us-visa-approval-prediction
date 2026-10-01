@@ -9,6 +9,7 @@ from us_visa.entity.artifact_entity import DataIngestionArtifact
 from us_visa.exception import USvisaException
 from us_visa.logger import logging
 from us_visa.data_access.usvisa_data import USvisaData
+from us_visa.constants import TARGET_COLUMN
 
 
 
@@ -60,7 +61,12 @@ class DataIngestion:
         logging.info("Entered split_data_as_train_test method of Data_Ingestion class")
 
         try:
-            train_set, test_set = train_test_split(dataframe, test_size=self.data_ingestion_config.train_test_split_ratio)
+            train_set, test_set = train_test_split(
+                dataframe,
+                test_size=self.data_ingestion_config.train_test_split_ratio,
+                random_state=42,
+                stratify=dataframe[TARGET_COLUMN],
+            )
             logging.info("Performed train test split on the dataframe")
             logging.info(
                 "Exited split_data_as_train_test method of Data_Ingestion class"
