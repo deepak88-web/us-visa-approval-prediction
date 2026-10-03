@@ -1,112 +1,84 @@
-# us-visa-approval-prediction
-US Visa Approval Prediction Using Machine Learning
+# US Visa Approval Prediction
 
-## Git commands
+A machine learning project that predicts whether a US employment-based visa application will be certified or denied, based on applicant and employer information. It includes a data and model training pipeline and a small web application for predictions.
 
-```bash
-git add .
+## What the project does
 
-git commit -m "Updated"
+- Reads visa application records from MongoDB and splits them into training and test data.
+- Checks the data schema and reports data drift with Evidently.
+- Prepares categorical and numerical features, trains candidate classifiers, and evaluates a new model against the current model using F1 score.
+- Stores an accepted model in Amazon S3 and uses it to make predictions through a FastAPI web form.
 
-git push origin main
+## Tech stack
+
+Python, pandas, scikit-learn, imbalanced-learn, XGBoost, CatBoost, FastAPI, MongoDB, Amazon S3, and Evidently.
+
+## Project structure
+
+```text
+config/                 Data schema and model search configuration
+notebook/               Exploratory analysis and model development notebooks
+static/                 Web application styles
+templates/              Prediction form template
+us_visa/components/     Ingestion, validation, transformation, training, evaluation, and model storage
+us_visa/pipeline/       Training and prediction pipeline orchestration
+app.py                  FastAPI application
 ```
 
+## Setup
 
-## How to run?
+Requires Python 3.10 or newer, access to the configured MongoDB database, and AWS credentials with access to the model bucket.
 
-python -m venv .venv
+1. Create and activate a virtual environment:
 
-.venv\Scripts\Activate.ps1
+   ```powershell
+   python -m venv .venv
+   .venv\Scripts\Activate.ps1
+   ```
 
-pip install -r requirements.txt
+2. Install dependencies:
 
-## Workflow:
+   ```powershell
+   pip install -r requirements.txt
+   ```
 
-1. constants
-2. entity
-3. components
-4. pipeline
-5. Main file
+3. Create a `.env` file in the project root and set the MongoDB connection string:
 
+   ```env
+   MONGODB_URL_KEY=<your-mongodb-connection-string>
+   ```
 
-### Export the  environment variable
+4. Set AWS credentials in your environment. The application reads `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`; the configured AWS region is `ap-southeast-2`. The model bucket is configured in `us_visa/constants/__init__.py`.
+
+Keep credentials in environment variables or a local `.env` file. Do not commit secrets.
+
+## Run the application
+
+Start the FastAPI app from the project root:
+
+```powershell
+uvicorn app:app --host 0.0.0.0 --port 8080
 ```
 
+Open `http://localhost:8080` to use the prediction form. The form accepts applicant and employer details and displays the model's predicted outcome. The `/train` route starts a training run and requires the MongoDB and AWS configuration above.
 
-export MONGODB_URL="mongodb+srv://<username>:<password>...."
+## Training pipeline
 
-export AWS_ACCESS_KEY_ID=<AWS_ACCESS_KEY_ID>
+The training pipeline runs these stages in order:
 
-export AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY>
+1. Ingest records from MongoDB and create a train/test split.
+2. Validate the expected columns and generate a data drift report.
+3. Transform features and address class imbalance in the training data.
+4. Train and evaluate candidate models using F1 score.
+5. Upload the accepted model to Amazon S3.
 
+Pipeline artifacts, including the drift report, are written under `artifact/` for each run.
 
-```
+## CI/CD Deployment
 
+CI/CD deployment has been configured using **GitHub Actions, Docker, Amazon ECR, and Amazon EC2**. The workflow automatically builds the Docker image, pushes it to the configured Amazon ECR repository, and deploys the application on the EC2 instance.
 
-# AWS-CICD-Deployment-with-Github-Actions
-
-## 1. Login to AWS console.
-
-## 2. Create IAM user for deployment
-
-	#with specific access
-
-	1. EC2 access : It is virtual machine
-
-	2. ECR: Elastic Container registry to save your docker image in aws
+The required AWS resources and GitHub Actions secrets have been configured using credentials and resource identifiers from the project's AWS account.
 
 
-	#Description: About the deployment
 
-	1. Build docker image of the source code
-
-	2. Push your docker image to ECR
-
-	3. Launch Your EC2 
-
-	4. Pull Your image from ECR in EC2
-
-	5. Lauch your docker image in EC2
-
-	#Policy:
-
-	1. AmazonEC2ContainerRegistryFullAccess
-
-	2. AmazonEC2FullAccess
-
-	
-## 3. Create ECR repo to store/save docker image
-    - Save the URI: 315865595366.dkr.ecr.us-east-1.amazonaws.com/visarepo
-
-	
-## 4. Create EC2 machine (Ubuntu) 
-
-## 5. Open EC2 and Install docker in EC2 Machine:
-	
-	
-	#optinal
-
-	sudo apt-get update -y
-
-	sudo apt-get upgrade
-	
-	#required
-
-	curl -fsSL https://get.docker.com -o get-docker.sh
-
-	sudo sh get-docker.sh
-
-	sudo usermod -aG docker ubuntu
-
-	newgrp docker
-	
-# 6. Configure EC2 as self-hosted runner:
-    setting>actions>runner>new self hosted runner> choose os> then run command one by one
-
-
-# 7. Setup github secrets:
-
-   - AWS_ACCESS_KEY_ID
-   - AWS_SECRET_ACCESS_KEY
-   - AWS_DEFAULT_REGION
-   - ECR_REPO
