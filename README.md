@@ -27,7 +27,7 @@ app.py                  FastAPI application
 
 ## Setup
 
-Requires Python 3.10 or newer, access to the configured MongoDB database, and AWS credentials with access to the model bucket.
+Requires Python 3.13.1, access to the configured MongoDB database, and AWS credentials with access to the model bucket.
 
 1. Create and activate a virtual environment:
 
@@ -81,4 +81,4 @@ CI/CD deployment has been configured using **GitHub Actions, Docker, Amazon ECR,
 The required AWS resources and GitHub Actions secrets have been configured using credentials and resource identifiers from the project's AWS account.
 
 
-
+ecr repo uri : 107489387220.dkr.ecr.ap-southeast-2.amazonaws.com/visa

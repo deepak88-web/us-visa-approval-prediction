@@ -1,0 +1,26 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Git and local tooling
+.git
+.gitignore
+.venv
+venv
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Generated files and local data
+artifact/
+logs/
+data_drift_report.html
+notebook/
+.ipynb_checkpoints/
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
