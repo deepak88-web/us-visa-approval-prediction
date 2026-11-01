@@ -61,7 +61,10 @@ class DataForm:
 async def index(request: Request):
 
     return templates.TemplateResponse(
-            "usvisa.html",{"request": request, "context": "Rendering"})
+        request=request,
+        name="usvisa.html",
+        context={"request": request, "context": "Rendering"},
+    )
 
 
 @app.get("/train")
@@ -109,8 +112,9 @@ async def predictRouteClient(request: Request):
             status = "Visa Not-Approved"
 
         return templates.TemplateResponse(
-            "usvisa.html",
-            {"request": request, "context": status},
+            request=request,
+            name="usvisa.html",
+            context={"request": request, "context": status},
         )
         
     except Exception as e:
