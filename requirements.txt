@@ -1,5 +1,5 @@
 ipykernel
-pandas
+pandas<3
 numpy
 matplotlib
 plotly
