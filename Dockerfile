@@ -4,6 +4,8 @@ WORKDIR /app
 
 COPY . /app
 
+RUN touch /app/.project-root
+
 RUN pip install -r requirements.txt
 
 CMD ["python3", "app.py"]
